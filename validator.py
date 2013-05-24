@@ -16,11 +16,13 @@ class Condition(object):
         size = len(globs)
         names = []
         for i, obj in enumerate(objs):
-                name = "_%d" % (size + i)
+            if isinstance(obj, Condition):
+                names.append(obj.__ps__)
+                globs.update(obj.__globs__)
+            else:
+                name = "_%d" % id(obj)
                 globs[name] = obj
                 names.append(name)
-
-        #print(string.format(self.__ps__, *names), globs)
 
         return self.__class__(string.format(self.__ps__, *names), globs)
 
