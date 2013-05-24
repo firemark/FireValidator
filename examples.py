@@ -4,6 +4,8 @@ Examples how to use FireValidator
 
 from datetime import datetime
 from validator import *
+from utils import length
+
 
 
 def validate_int():

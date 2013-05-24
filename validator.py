@@ -1,12 +1,13 @@
 import types
 
-__all__ = ['C', 'Validator', 'ValidationError', 'length']
+__all__ = ['C', 'Validator', 'ValidationError']
 
 class Condition(object):
 
     """Magic. Don't touch"""
 
-    __compile = None
+    __ps = None
+    __globals = {}
 
     def __init__(self, parse_string="x", __globals=None):
         self.__ps = parse_string
@@ -143,7 +144,3 @@ class ValidationError(Exception):
         Exception.__init__(self, msg)
 
 C = Condition()
-
-
-def length(e):
-    return e.__len__()
