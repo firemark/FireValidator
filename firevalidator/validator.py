@@ -83,9 +83,6 @@ class Condition(object):
     def __rpow__(self, obj):
         return self.__eval_str_arg__("({1} ** {0})", obj)
 
-    def __contains__(self, obj):
-        return self.__eval_str_arg__("({1} in {0})", obj)
-
     def __mod__(self, obj):
         return self.__eval_str_arg__("({0} % {1})", obj)
 
