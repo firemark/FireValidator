@@ -3,8 +3,8 @@ Examples how to use FireValidator
 """
 
 from datetime import datetime
-from validator import *
-from utils import length
+from firevalidator import *
+from firevalidator.utils import length
 
 
 
