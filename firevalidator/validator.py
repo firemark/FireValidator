@@ -1,6 +1,6 @@
 import types
 
-__all__ = ['C', 'Validator', 'ValidationError']
+__all__ = ['C', 'Validator', 'ValidationError', 'Con']
 
 
 class Condition(object):
@@ -386,19 +386,34 @@ class Validator(object):
 
     def validate(self, item):
         for obj in self.objs:
-            if isinstance(obj, list):  # list with condictions
-                for condition, message in obj:
-                    if not condition(item):
-                        raise ValidationError(message)
-            else:  # cast function
-                try:
-                    item = obj(item)
-                except ValueError as e:
-                    raise ValidationError(str(e))
-            
+            item = Validator.single_validate(obj, item)
 
         return item
 
+    @staticmethod
+    def single_validate(obj, item):
+        if isinstance(obj, list):  # list with condictions
+            for condition, message in obj:
+                if not condition(item):
+                    raise ValidationError(message)
+        else:  # cast function
+            try:
+                return obj(item)
+            except ValueError as e:
+                raise ValidationError(str(e))
+
+        return item
+
+class Con(object):
+    """Condition object"""
+
+    def __init__(self, con, msg):
+        self.con = con.__compile__() if isinstance(con, type(C)) else con
+        self.msg = msg
+
+    def __call__(self, item):
+        if not self.con(item):
+            raise ValidationError(self.msg)
 
 class ValidationError(Exception):
 

@@ -1,6 +1,6 @@
 from unittest import TestCase
-from firevalidator import *
-from firevalidator.utils import length
+from ..validator import *
+from ..validator.utils import length
 
 
 class TestValidator(TestCase):
