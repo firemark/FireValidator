@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='FireValidator',
-      version='0.1',
+      version='0.2',
       description='Eyecandy and simple validator',
       author='Firemark',
       author_email='marpiechula@gmail.com',

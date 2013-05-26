@@ -56,9 +56,9 @@ validators = {
     }),
     'zip_code': Validator(striped_str, {
         length(C) == len('XX-XXX'): 'zip code must be XX-XXX',
-        C[0:2].isdigit(): 'First part is\'nt a number',
+        C[0:2].isdigit(): 'First part isn\'t a number',
         C[2] == '-': 'prefix is not \'-\'', 
-        C[3:5].isdigit(): 'Last part is\'nt a number'
+        C[3:5].isdigit(): 'Last part isn\'t a number'
     })
 }
 
@@ -74,8 +74,6 @@ def hello():
                 output[key] = validators[key].validate(value)
             except ValidationError as e:
                 err[key] = e.message
-            except ValueError as e:
-                err[key] = str(e)
 
             vars[key] = value
 

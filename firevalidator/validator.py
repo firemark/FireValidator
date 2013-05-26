@@ -368,21 +368,36 @@ class Condition(object):
 
 class Validator(object):
 
-    def __init__(self, cast_to, conditions):
-        self.cast_to = cast_to
-        if isinstance(conditions, dict):
-            conditions = conditions.items()
-        self.conditions = [(con.__compile__() if isinstance(con, Condition) else con, msg)
-                           for con, msg in conditions]
+    def __init__(self, *objs):
+        sobjs = []
+        for obj in objs:
+            if isinstance(obj, dict):
+                sobjs.append([(con.__compile__() if isinstance(con, Condition) else con, msg)
+                              for con, msg in obj.items()])
+            elif isinstance(obj, tuple):
+                sobjs.append([(con.__compile__() if isinstance(con, Condition) else con, msg)
+                              for con, msg in obj])
+            elif isinstance(obj, types.FunctionType) or isinstance(obj, type):
+                sobjs.append(obj)
+            else:
+                raise ValueError('Invalid object: %s' % obj)
 
-    def validate(self, obj):
-        casted = self.cast_to(obj)
+        self.objs = sobjs
 
-        for condition, message in self.conditions:
-            if not condition(casted):
-                raise ValidationError(message)
+    def validate(self, item):
+        for obj in self.objs:
+            if isinstance(obj, list):  # list with condictions
+                for condition, message in obj:
+                    if not condition(item):
+                        raise ValidationError(message)
+            else:  # cast function
+                try:
+                    item = obj(item)
+                except ValueError as e:
+                    raise ValidationError(str(e))
+            
 
-        return casted
+        return item
 
 
 class ValidationError(Exception):

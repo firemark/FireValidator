@@ -45,7 +45,7 @@ def validate_date():
     date_validator = Validator(lambda s: datetime.strptime(s, "%d-%m-%Y"), (
         (lambda date: date.year <= datetime.now().year,
             "Year mustn't be in the future"),
-        (1 + C.day % 2, "Day must be even"),
+        ((1 + C.day) % 2, "Day must be even"),
         (C.month > 5, "Month must be later than May")
     ))
 
