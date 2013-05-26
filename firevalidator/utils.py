@@ -21,3 +21,6 @@ def striped_str(string):
 
 def conts(a, b):
     return a.__eval_str_arg__("({0} in {1})", b)
+
+def rconts(a, b):
+    return a.__eval_str_arg__("({1} in {0})", b)

@@ -9,4 +9,5 @@ setup(name='FireValidator',
       author_email='marpiechula@gmail.com',
       url='https://github.com/firemark/FireValidator',
       packages=find_packages(),
+      test_suite='tests'
      )
