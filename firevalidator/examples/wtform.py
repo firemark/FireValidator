@@ -37,30 +37,31 @@ template = Template("""
 <html>
 <head>
     <title>Test site</title>
-    <style>
-        span { background-color: gray;}
-        strong { color: red;}
-    </style>
+    <link rel="stylesheet" type='text/css' href="static/css.css" />
 </head>
 <body>
-    <form method='POST' action='/'>
-        <table>
+    <h2>Wtform <3</h2>
+    <form method='POST' action='/' class="form-horizontal">
         {% for field in form  %}
-        <tr>
-            <th>{{field.label}}</th>
-            <td>{{field()}}</td>
-            <td><strong>{% for error in field.errors %} {{error}} {% endfor %}</strong></td>
-        </tr>
+        <div class="control-group {% if field.errors %}error{%endif%}">
+            <label class="control-label" for="{{field.name}}">{{field.label}}</label>
+            <div class="controls">
+                {{field()}}
+                <span class="help-inline">{% for error in field.errors %} {{error}} {% endfor %}</span>
+            </div>
+            
+        </div>
         {% endfor %}
-        </table>
-        <input type='submit' />
+        <input class="btn btn-primary" type='submit' />
     </form>
-    Valid records:
-    <ul>
-    {% for key, value in output.items() %}
-        <li><b>{{key}} =></b> <span>{{value}}</span></li>
-    {% endfor %}
-    </ul>
+    <div>    
+        <strong>records:</string>
+        <ul>
+        {% for key, value in output.items() %}
+            <li><b>{{key}} =></b> <span>{{value}}</span></li>
+        {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
 """)

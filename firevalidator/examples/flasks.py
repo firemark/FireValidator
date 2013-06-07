@@ -1,7 +1,7 @@
 from firevalidator import *
 from firevalidator.utils import striped_str, length, in_range
 from collections import defaultdict
-from flask import Flask, request
+from flask import Flask, request, url_for
 from jinja2 import Template
 from datetime import datetime
 
@@ -12,24 +12,34 @@ template = Template("""
 <html>
 <head>
     <title>Test site</title>
-    <style>
-        span { background-color: gray;}
-        strong { color: red;}
-    </style>
+    <link rel="stylesheet" type='text/css' href="static/css.css" />
 </head>
 <body>
-    <form method='POST' action='/'>
-        Even integer in range(0, 10)<input type='text' name='int' value='{{int}}'/><strong>{{err['int']}}</strong><br />
-        Date in future [DD-MM-YYYY]<input type='text' name='date' value='{{date}}'/><strong>{{err['date']}}</strong><br />
-        First name [Max len:20]<input type='text' name='first_name' value='{{first_name}}'/><strong>{{err['first_name']}}</strong><br />
-        Last name [Max len:20]<input type='text' name='last_name' value='{{last_name}}'/><strong>{{err['last_name']}}</strong><br />
-        Zip code [XX-XXX]<input type='text' name='zip_code' value='{{zip_code}}' /><strong>{{err['zip_code']}}</strong><br />
-        Valid records:
-        <ul>
-        {% for key, value in output.items() %}
-            <li><b>{{key}} =></b> <span>{{value}}</span></li>
-        {% endfor %}
-        </ul>
+    <form method='POST' action='/' class="form-horizontal">
+        <h2>Validator &lt;3</h2>
+        <label>Even integer in range(0, 10)</label>
+            <input type='text' name='int' value='{{int}}'/>
+            <span class="help-inline">{{err['int']}}</span>
+        <label>Date in future [DD-MM-YYYY]</label>
+            <input type='text' name='date' value='{{date}}'/>
+            <span class="help-inline">{{err['date']}}</span>
+        <label>First name [Max len:20]</label>
+            <input type='text' name='first_name' value='{{first_name}}'/>
+            <span class="help-inline">{{err['first_name']}}</span>
+        <label>Last name [Max len:20]</label>
+            <input type='text' name='last_name' value='{{last_name}}'/>
+            <span class="help-inline">{{err['last_name']}}</span>
+        <label>Zip code [XX-XXX]</label>
+            <input type='text' name='zip_code' value='{{zip_code}}' />
+            <span class="help-inline">{{err['zip_code']}}</span>
+        <div>    
+            <strong>Valid records:</strong>
+            <ul>
+            {% for key, value in output.items() %}
+                <li><b>{{key}} =></b> <span>{{value}}</span></li>
+            {% endfor %}
+            </ul>
+        </div>
         <input type='submit' />
     </form>
 </body>
@@ -63,25 +73,32 @@ validators = {
 }
 
 
-@app.route("/", methods=['GET', 'POST'])
-def hello():
+@app.route("/", methods=['GET'])
+def get():
+    return template.render(
+        err=defaultdict(str),
+        output={}
+    )
+
+@app.route("/", methods=['POST'])
+def post():
     err = defaultdict(str)
     vars = {}
     output = {}
-    if request.method == "POST":
-        for key, value in request.form.items():
-            try:
-                output[key] = validators[key].validate(value)
-            except ValidationError as e:
-                err[key] = e.message
 
-            vars[key] = value
+    for key, value in request.form.items():
+        try:
+            output[key] = validators[key].validate(value)
+        except ValidationError as e:
+            err[key] = e.message
+
+        vars[key] = value
 
     return template.render(
         err=err,
         output=output,
         **vars
-    )
+    ) 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8888)
