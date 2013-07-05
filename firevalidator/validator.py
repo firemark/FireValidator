@@ -404,8 +404,18 @@ class Validator(object):
 
         return item
 
+
 class Con(object):
-    """Condition object"""
+
+    """
+    Condition object
+    >>> con = Con(C == 5, "number is not equal 5")
+    >>> con(5)
+    >>> con(4)
+    Traceback (most recent call last):
+    ...
+    ValidationError: number is not equal 5
+    """
 
     def __init__(self, con, msg):
         self.con = con.__compile__() if isinstance(con, type(C)) else con
@@ -415,10 +425,12 @@ class Con(object):
         if not self.con(item):
             raise ValidationError(self.msg)
 
+
 class ValidationError(Exception):
 
     def __init__(self, msg):
         self.message = msg
         Exception.__init__(self, msg)
+
 
 C = Condition()
