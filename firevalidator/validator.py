@@ -21,7 +21,8 @@ class Condition(object):
         'x + 5'
         >>> C.__eval_str_arg__('{0}.macarena[50]', 5, 4, 3).__ps__
         'x.macarena[50]'
-        >>> C.__eval_str_arg__('{1} in {0}', ' ').__globs__.values()[0] == ' '
+        >>> str_id = '_%d' % id(' ')
+        >>> C.__eval_str_arg__('{1} in {0}', ' ').__globs__[str_id] == ' '
         True
         >>> len(C.__eval_str_arg__('{0} + 5', 5, 4, 3).__globs__)
         3
@@ -372,10 +373,12 @@ class Validator(object):
         sobjs = []
         for obj in objs:
             if isinstance(obj, dict):
-                sobjs.append([(con.__compile__() if isinstance(con, Condition) else con, msg)
+                sobjs.append([(con.__compile__()
+                               if isinstance(con, Condition) else con, msg)
                               for con, msg in obj.items()])
             elif isinstance(obj, tuple):
-                sobjs.append([(con.__compile__() if isinstance(con, Condition) else con, msg)
+                sobjs.append([(con.__compile__()
+                               if isinstance(con, Condition) else con, msg)
                               for con, msg in obj])
             elif isinstance(obj, types.FunctionType) or isinstance(obj, type):
                 sobjs.append(obj)
@@ -414,7 +417,7 @@ class Con(object):
     >>> con(4)
     Traceback (most recent call last):
     ...
-    ValidationError: number is not equal 5
+    firevalidator.validator.ValidationError: number is not equal 5
     """
 
     def __init__(self, con, msg):
