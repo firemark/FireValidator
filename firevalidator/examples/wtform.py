@@ -40,7 +40,7 @@ template = Template("""
     <link rel="stylesheet" type='text/css' href="static/css.css" />
 </head>
 <body>
-    <h2>Wtform <3</h2>
+    <h2>Wtform &lt;3</h2>
     <form method='POST' action='/' class="form-horizontal">
         {% for field in form  %}
         <div class="control-group {% if field.errors %}error{%endif%}">
@@ -58,7 +58,7 @@ template = Template("""
         <strong>records:</string>
         <ul>
         {% for key, value in output.items() %}
-            <li><b>{{key}} =></b> <span>{{value}}</span></li>
+            <li><b>{{key}} =&gt;</b> <span>{{value}}</span></li>
         {% endfor %}
         </ul>
     </div>
