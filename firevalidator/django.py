@@ -9,15 +9,6 @@ import types
 
 class Validator(FireValidator):
 
-    def generate_func(self, obj):
-        def func(value):
-            if value is not None:
-                try:
-                    FireValidator.single_validate(obj, value)
-                except FireValidationError as e:
-                    raise ValidationError(e.message)
-        return func
-
     def __rlshift__(self, x):
         """
         Because django sucks and cannot into normal validators
