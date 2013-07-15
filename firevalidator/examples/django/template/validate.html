@@ -1,30 +1,43 @@
 <html>
 <head>
     <title>Test site</title>
-    <link rel="stylesheet" type='text/css' href="static/css.css" />
+    <link rel="stylesheet" type='text/css' href="{{STATIC_URL}}css.css" />
+    <style>
+        .well{
+            border: 2px #DDD solid;
+            border-radius: 10px 10px 10px 10px;
+            -moz-border-radius: 10px 10px 10px 10px;
+            background-color: #EEE;
+            width:90%;
+            margin: auto;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Wtform <3</h2>
-    <form method='POST' action='/' class="form-horizontal">
-        {% for field in form  %}
-        <div class="control-group {% if field.errors %}error{%endif%}">
-            <label class="control-label" for="{{field.name}}">{{field.label}}</label>
-            <div class="controls">
-                {{field()}}
-                <span class="help-inline">{% for error in field.errors %} {{error}} {% endfor %}</span>
+    <h2>Django &lt;/3</h2>
+    <div class="well">
+        <form method='POST' action='/' class="form-horizontal">
+            {% csrf_token %}
+            {% for field in form  %}
+            <div class="control-group {% if field.errors %}error{%endif%}">
+                <label class="control-label" for="{{ field.name }}">{{ field.label }}</label>
+                <div class="controls">
+                    {{field}}
+                    <span class="help-inline">{{field.errors}}</span>
+                </div>
             </div>
-            
+            {% endfor %}
+            <input class="btn btn-primary" type='submit' />
+        </form>
+        <div>    
+            <strong>records:</string>
+            <ul>
+            {% for key, value in form.cleaned_data.items %}
+                <li><b>{{key}} =&gt;</b> <span>{{value}}</span></li>
+            {% endfor %}
+            </ul>
         </div>
-        {% endfor %}
-        <input class="btn btn-primary" type='submit' />
-    </form>
-    <div>    
-        <strong>records:</string>
-        <ul>
-        {% for key, value in output.items() %}
-            <li><b>{{key}} =></b> <span>{{value}}</span></li>
-        {% endfor %}
-        </ul>
     </div>
 </body>
 </html>

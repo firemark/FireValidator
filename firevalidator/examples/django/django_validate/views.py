@@ -1,7 +1,15 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
+from django.views.generic import View
 from .forms import MyForm
 
 
-def validate(request):
-    # View code here...
-    return render_to_response("validate.html")
+class ValidateView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = MyForm()
+        return render(request, 'validate.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = MyForm(request.POST)
+        form.is_valid() 
+        return render(request, 'validate.html', {'form': form})

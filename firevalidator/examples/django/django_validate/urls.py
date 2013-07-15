@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
+from .views import ValidateView
 
 urlpatterns = patterns('',
-
-    url(r'^$', 'django_validate.views.validate', name='home'),
+    url(r'^$', ValidateView.as_view(), name='home'),
 )

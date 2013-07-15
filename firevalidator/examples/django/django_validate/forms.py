@@ -1,10 +1,14 @@
-from django import forms
+from django.forms import IntegerField, Form, CharField, DateField
 from firevalidator.utils import striped_str, length, in_range
-from firevalidator.wtform import Validator, C, Con
+from firevalidator.django import Validator, C, Con
 
 int_validators = [Con(C % 2 == 0, 'Integer must be even.')]
-date_validators = [Con(
-    lambda date: date > date.today(), 'Date must be in future.')]
+date_validators = [Con(C > C.today(), 'Date must be in future.')]
+name_validators = Validator(striped_str, {
+    lambda s: ' ' not in s: 'field cannot contains spaces.',
+    length(C) <= 20: 'field is too big.',
+    C[0].upper() == C[0]: 'first letter must be big.'
+})
 
 zip_validators = Validator(striped_str, {
     length(C) == len('XX-XXX'): 'zip code must be XX-XXX',
@@ -14,17 +18,11 @@ zip_validators = Validator(striped_str, {
 })
 
 
-class MyForm(forms.Form):
-    number = forms.IntegerField('Even integer', validators=int_validators)
-    date = forms.DateField('Date in future [DD-MM-YYYY]',
-                           validators=date_validators,
-                           format="%d-%m-%Y")
-    first_name = TextField('First name',
-                           blank=False,
-                           null=False,
-                           validators=[name_validator])
-    last_name = TextField('Last name',
-                          blank=False,
-                          null=False,
-                          validators=[name_validator])
-    zip_code = TextField('Zip Code', validators=zip_validators)
+class MyForm(Form):
+    number = IntegerField(label='Even integer', validators=int_validators)
+    date = DateField(label='Date in future [DD-MM-YYYY]',
+                     input_formats=['%d-%m-%Y'],
+                     validators=date_validators)
+    first_name = CharField(label='First name') << name_validators
+    last_name = CharField(label='Last name') << name_validators
+    zip_code = CharField(label='Zip Code') << zip_validators
